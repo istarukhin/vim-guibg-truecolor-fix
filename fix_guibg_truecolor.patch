@@ -1,0 +1,33 @@
+From 48d2d83a6572a2aac518749fa25eb1071bb24855 Mon Sep 17 00:00:00 2001
+From: Igor Starukhin <ig.starukhin@gmail.com>
+Date: Sun, 7 May 2017 06:01:13 +0300
+Subject: [PATCH] Fixed Normal guibg=NONE for transparent bg with true color
+
+---
+ src/syntax.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/src/syntax.c b/src/syntax.c
+index 42a0bdc3f..79138ba4d 100644
+--- a/src/syntax.c
++++ b/src/syntax.c
+@@ -8297,6 +8297,16 @@ set_normal_colors(void)
+ 		cterm_normal_bg_gui_color = HL_TABLE()[idx].sg_gui_bg;
+ 		must_redraw = CLEAR;
+ 	    }
++	    else if (p_tgc)
++	    {
++		if (HL_TABLE()[idx].sg_gui_bg_name)
++		{
++		    vim_free(HL_TABLE()[idx].sg_gui_bg_name);
++		    HL_TABLE()[idx].sg_gui_bg_name = NULL;
++		}
++		cterm_normal_bg_gui_color = INVALCOLOR;
++		must_redraw = CLEAR;
++	    }
+ 	}
+     }
+ #endif
+-- 
+2.12.2
+
